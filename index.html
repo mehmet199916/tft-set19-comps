@@ -3,131 +3,78 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Set 19 Trait-Web Comps</title>
-  <meta name="description" content="Theory-crafted TFT Set 19 (Prismatic Tour) comps built from Set 18 ladder data: low breakpoints, overlapping traits, early-to-late transitions.">
+  <title>Set 19 Comps</title>
+  <meta name="description" content="TFT Set 19 (Prismatic Tour) comps: early boards, level 8-9 boards, reroll lines and a quick cheat sheet.">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <a class="skip" href="#comps">Skip to comps</a>
+  <a class="skip" href="#main">Skip to content</a>
   <header class="hero">
     <div class="wrap hero-inner">
-      <p class="eyebrow">TFT Set 19 &middot; Prismatic Tour &middot; PBE theory-craft</p>
-      <h1>Set 19 <span class="grad">Trait-Web</span> Comps</h1>
-      <p class="lede">Boards built the way Set 18's best comps were built: hit low breakpoints with as few units as possible, make every unit feed two or more active traits, keep a 4-5 unit frontline, push only your carry's trait, and add one bridge unit per level.</p>
-      <div class="hero-stats" id="hero-stats"></div>
-      <nav class="toc" aria-label="Sections">
-        <a href="#lessons">Set 18 lessons</a>
-        <a href="#cases">Set 18 case studies</a>
-        <a href="#early">Openers (lv 4-5)</a>
-        <a href="#late">Late boards (lv 7-9)</a>
-        <a href="#method">Method</a>
-      </nav>
+      <p class="eyebrow">TFT Set 19 &middot; Prismatic Tour</p>
+      <h1>Set 19 <span class="grad">Comps</span></h1>
+      <p class="lede">Boards that stack small trait bonuses on top of each other, from your first opener to level 9. Tap a trait to see which units give it.</p>
     </div>
   </header>
 
-  <main class="wrap">
-    <aside class="caveat" role="note">
-      <strong>PBE only.</strong> Set 19 hit PBE on 2026-11-17 and goes live 2026-12-02, so there is no ladder data yet.
-      Every Set 19 comp here is theory-crafted from Set 18 patterns. Units, costs, traits and breakpoints come from MetaTFT's PBE data file
-      (<span id="data-gen"></span>) and may change; trait counts are computed by a script, never typed by hand.
-      Last updated <span id="last-updated"></span>.
-    </aside>
+  <nav class="tabbar" aria-label="Sections">
+    <div class="wrap tabbar-inner" role="tablist">
+      <a class="maintab" role="tab" href="#early" data-tab="early">Early game <span>lv 4-5</span></a>
+      <a class="maintab" role="tab" href="#late" data-tab="late">Lv 8-9 boards</a>
+      <a class="maintab" role="tab" href="#reroll" data-tab="reroll">Reroll comps</a>
+      <a class="maintab" role="tab" href="#cheatsheet" data-tab="cheatsheet">Cheat sheet</a>
+    </div>
+  </nav>
 
-    <section id="lessons" class="section">
-      <h2>Why Set 18 comps won</h2>
-      <p class="section-intro">Ten patterns from <a href="https://www.metatft.com/comps" rel="noopener">MetaTFT</a> (patch 18.7, Platinum+, 238,856 boards) and <a href="https://tactics.tools/team-compositions" rel="noopener">tactics.tools</a> (patch 18.6, Diamond+, 4.0M comps), pulled 2026-11-18.</p>
-      <div id="principles" class="principles"></div>
-      <details class="table-wrap">
-        <summary>Set 18 reference comps (MetaTFT, sorted by average placement)</summary>
-        <div class="scroll-x">
-          <table class="ref">
-            <thead><tr><th>Comp</th><th>Plan</th><th>Avg</th><th>Top 4</th><th>Win</th><th>Boards</th><th>Trait web</th></tr></thead>
-            <tbody id="ref-body"></tbody>
-          </table>
-        </div>
-      </details>
-    </section>
+  <main id="main" class="wrap">
+    <p class="caveat" role="note">Set 19 is on PBE; these comps are theory-crafted and may change. Data: PBE file from <span id="data-gen"></span>.</p>
 
-    <section id="cases" class="section">
-      <h2>Set 18 case studies</h2>
-      <p class="section-intro">How 14 of the best Set 18 comps were actually played: the board at each stage, which units bridge traits, items, economy and why it won. Numbers from MetaTFT comp pages (Platinum+, last 3 days). Neither site returns per-comp augment data for Set 18, so none is shown.</p>
-      <div id="case-list" class="cases"></div>
-    </section>
-
-    <div class="filters" id="comps" role="group" aria-label="Filter comps">
+    <div class="filters" id="comp-filters" role="group" aria-label="Filter comps">
       <div class="seg" role="group" aria-label="Plan">
         <button class="chip-btn is-on" data-filter="all" aria-pressed="true">All</button>
         <button class="chip-btn" data-filter="Combat" aria-pressed="false">Combat</button>
         <button class="chip-btn" data-filter="Scaling/Econ" aria-pressed="false">Scaling / Econ</button>
       </div>
-      <div class="seg" role="group" aria-label="Level">
-        <button class="chip-btn is-on" data-level="all" aria-pressed="true">All levels</button>
-        <button class="chip-btn" data-level="early" aria-pressed="false">Lv 4-5</button>
-        <button class="chip-btn" data-level="late" aria-pressed="false">Lv 7-9</button>
-      </div>
     </div>
 
-    <section id="early" class="section group">
-      <h2>Openers &middot; level 4-5</h2>
-      <p class="section-intro">Cheap and wide: 1-3 cost units, 4-6 traits at their lowest breakpoints, and most units carry into the late board they flow into. Tap a trait to light up its units on the board.</p>
+    <section id="panel-early" class="panel" role="tabpanel" aria-label="Early game" hidden>
+      <h2>Early game &middot; level 4-5</h2>
+      <p class="section-intro">Cheap openers that light 4-6 traits. Each one grows into a level 8 board.</p>
       <div id="early-list" class="cards"></div>
     </section>
 
-    <section id="late" class="section group">
-      <h2>Late boards &middot; level 7 &rarr; 8 &rarr; 9</h2>
-      <p class="section-intro">4-5 frontliners, 3-4 backliners, one carry trait pushed past its first breakpoint, every other slot a bridge. Tabs show the level-7, level-8 and level-9 versions.</p>
+    <section id="panel-late" class="panel" role="tabpanel" aria-label="Level 8-9 boards" hidden>
+      <h2>Level 8-9 boards</h2>
+      <p class="section-intro">Level 7, 8 and 9 versions of each board. 4-5 frontliners, 3-4 damage dealers behind them.</p>
       <div id="late-list" class="cards"></div>
     </section>
 
-    <section id="method" class="section">
-      <h2>Method, scoring model &amp; caveats</h2>
-      <div class="method-grid">
-        <div>
-          <h3>Scoring model (tools/score.py)</h3>
-          <ul class="method" id="model-list">
-            <li><b>+1.0</b> per non-unique trait at its first breakpoint <span class="muted">(86% of top-20 traits sit there)</span></li>
-            <li><b>+1.6</b> if a carry's own trait is at tier 2+, <b>-1.6</b> if a level 8-9 board pushes none <span class="muted">(Invoker 5.15 &rarr; 3.67, Executioner 3.91 &rarr; 2.79)</span></li>
-            <li><b>+0.15</b> per extra tier on other traits <span class="muted">(pushing non-carry traits: no gain)</span></li>
-            <li><b>+1.5 &times;</b> share of units in 2+ active traits <span class="muted">(Mama Beak: 7 traits on 7 units)</span></li>
-            <li><b>-1.2</b> per unit in no active trait, <b>-0.4</b> per wasted unit past a breakpoint <span class="muted">(0.34-place swing)</span></li>
-            <li><b>+1.0</b> opener bonus: 5 units, 4+ traits, &le;11 gold <span class="muted">(76-81% round-win)</span></li>
-            <li><b>-0.8</b> per unlockable unit; none allowed in openers</li>
-            <li>Hard limits: 4-5 frontline and 2+ backline damage dealers at level 7-9 (2-4 front early), cost curve per level <span class="muted">(7 frontliners: 5.76 avg)</span></li>
-          </ul>
-          <p class="muted">The search scored about 15,900 final boards (beam 300 for 47 forced carries, plus a wide level-5 search), then the shortlist was curated by hand around carries with real damage.</p>
-        </div>
-        <div>
-          <h3>Top-scoring boards that were rejected</h3>
-          <ul class="method" id="rejected-list"></ul>
-          <h3>Known model biases</h3>
-          <ul class="method">
-            <li>Galio and Lucian (cheap 2-trait Jazz glue) appear in most top boards: the model rewards their trait links but cannot judge unit strength.</li>
-            <li>R&amp;B 2 (Mel + Rell) counts as a "pushed" trait although it is a soul-link utility.</li>
-          </ul>
-        </div>
+    <section id="panel-reroll" class="panel" role="tabpanel" aria-label="Reroll comps" hidden>
+      <h2>Reroll comps</h2>
+      <p class="section-intro">Stop at the roll level, spend gold rolling until the starred carry is 3-star, then level and scale out. Theory-crafted for PBE.</p>
+      <div id="reroll-list" class="cards"></div>
+    </section>
+
+    <section id="panel-cheatsheet" class="panel" role="tabpanel" aria-label="Cheat sheet" hidden>
+      <h2>Cheat sheet</h2>
+      <p class="section-intro">Who does what, pulled from the PBE ability and trait text (numbers are not in the PBE text). <span id="cheat-gen"></span></p>
+      <div class="cheat-tools">
+        <label class="search"><span class="sr-only">Search units</span><input id="cheat-q" type="search" placeholder="Search units, traits or keywords" autocomplete="off"></label>
+        <div class="chips" id="cheat-chips" role="group" aria-label="Category"></div>
       </div>
-      <h3>Data notes</h3>
-      <ul class="method">
-        <li>Beach Pop is listed with breakpoint 0 in the PBE file; MetaTFT's set page and tactics.tools both use 3 / 5 / 7, which is used here.</li>
-        <li>K/DA counts star levels: the script assumes 1-3 costs are 2-star on level 7-9 boards and only 1-costs on level 4-5 boards.</li>
-        <li>Unique 1-unit traits count as active but are listed separately; per the PBE tooltip, Jazz and the Smeech unlock only count non-unique traits. Heartsteel and R&amp;B start at 1 unit.</li>
-        <li>Collab (random each game), Sona (level-10 unlock) and other 7-costs are ignored unless a card says so.</li>
-        <li><b>Team codes</b> follow MetaTFT's Team Planner format ("02" + three hex characters per unit, cheapest first, padded to 10 + "TFTSet19"). A generated code imported into MetaTFT's team builder loaded the same 8 units. tactics.tools' and MetaTFT's own copy buttons do not produce Set 19 codes yet, and in-game acceptance on PBE is unverified. Graves, Mordekaiser and Nasus share one id in the PBE file, so codes with them are flagged.</li>
-        <li>Board positions are a starting layout matching the tactics.tools link, not optimised positioning.</li>
-      </ul>
+      <div id="cheat-body"></div>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="wrap">
-      <p>Fan-made notes. Not endorsed by Riot Games. Stats: <a href="https://www.metatft.com" rel="noopener">MetaTFT</a>, <a href="https://tactics.tools" rel="noopener">tactics.tools</a>. Champion portraits are served by tactics.tools.</p>
+      <p>Fan-made, not endorsed by Riot Games. Unit data: <a href="https://www.metatft.com/new-set" rel="noopener">MetaTFT</a>. Portraits and team builder: <a href="https://tactics.tools" rel="noopener">tactics.tools</a>.</p>
     </div>
   </footer>
   <div id="live" class="sr-only" aria-live="polite"></div>
 
-  <script src="data/set18.js"></script>
-  <script src="data/set18_cases.js"></script>
   <script src="data/comps.js"></script>
+  <script src="data/cheatsheet.js"></script>
   <script src="js/app.js"></script>
 </body>
 </html>
