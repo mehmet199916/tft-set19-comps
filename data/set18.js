@@ -9,61 +9,61 @@ window.SET18 = {
     {
       title: 'Hit the LOWEST breakpoint, then layer another trait',
       body: 'In the 20 best MetaTFT comps, 101 of 117 active non-unique traits (86%) sit exactly at their first breakpoint. The most common winning pieces are 2-unit breakpoints: Brawler 2 (9 of 20 comps), Juggernaut 2 (7), Vanguard / Spellweaver / Lunar / Defender / Invoker / Summoner / Primal 2 (6 each).',
-      stat: '86% of active traits at breakpoint 1',
+      stat: '86% of active traits at breakpoint 1', chart: { type: 'split', a: 101, b: 16, la: 'at breakpoint 1', lb: 'above it' },
       src: 'metatft'
     },
     {
       title: 'Every slot should feed 2+ active traits',
       body: 'The best Set 18 comp, Mama Beak / Hecarim (3.97 avg, 61.5% top 4), runs 7 active traits on 7 units at level 7: Mama Beak, Krug and Sentinel each sit in two or three active traits. Comparing boards of the SAME comp at the SAME level (1,293 variants, ~649k boards), versions with fewer "wasted" units (units above a breakpoint they do not reach) placed 0.17 better, versions with more placed 0.17 worse.',
-      stat: '0.34-placement swing from wasted units',
+      stat: '0.34-placement swing from wasted units', chart: { type: 'delta', unit: 'place vs comp avg', rows: [['Fewer wasted units', -0.17], ['Same', 0.01], ['More wasted units', 0.17]] },
       src: 'metatft'
     },
     {
       title: 'One more trait beats one more vertical unit',
       body: 'Same comp, same level 8: Elderwood Aphelios with Elderwood 6 + 3 small traits averaged 6.03; swapping one Elderwood unit for Diana (opens Lunar 2 + Vanguard 2, 6 traits) averaged 3.37. Riftbeast Sentry at level 8 with Taric (Vanguard 2 + Emerald) averaged 2.71 vs 5.10 with Sett in that slot. Across all comps, +1 active trait at the same level = -0.16 placement, +2 = -0.37, -1 = +0.26.',
-      stat: 'Elderwood: 6.03 -> 3.37 by trading depth for width',
+      stat: 'Elderwood: 6.03 -> 3.37 by trading depth for width', chart: { type: 'delta', unit: 'place vs comp avg, same level', rows: [['-1 trait', 0.26], ['same traits', -0.01], ['+1 trait', -0.16], ['+2 traits', -0.37]] },
       src: 'metatft'
     },
     {
       title: 'Push exactly one carry trait past its first breakpoint',
       body: 'Pushing extra traits above the first breakpoint did not help on average (+0.10, same comp and level). The exception is the trait your carry uses: Invoker went 5.16 -> 3.67 -> 3.15 (Teemo), Adaptor 5.22 -> 4.24 -> 3.44 (Master Yi), Executioner 3.91 -> 2.79 -> 2.20 (Yunara), Summoner 4.56 -> 3.52 (Mama Beak).',
-      stat: 'Executioner t1 3.91 -> t3 2.20',
+      stat: 'Executioner t1 3.91 -> t3 2.20', chart: { type: 'bars', unit: 'avg place (lower is better)', max: 6, rows: [['Invoker t1', 5.15], ['Invoker t2', 3.67], ['Invoker t3', 3.14], ['Executioner t1', 3.91], ['Executioner t3', 2.19]] },
       src: 'metatft'
     },
     {
       title: 'Vertical "stack one trait" boards are the losers',
       body: 'Bottom of the table: Sprykin Tristana (only 3 traits: Sprykin 5, Fae 4, Defender 2) 4.90 avg / 43% top 4; Elderwood Rengar (4 traits) 4.91; Kha\'Zix Rival 3 5.29 avg / 34.9% top 4; Fae Xayah 5.59. Fae Tristana got WORSE when it added a 4th Fae at level 8 (4.82) than its 6-trait level-7 board (3.74).',
-      stat: 'Rival 3 vertical: 5.29 avg',
+      stat: 'Rival 3 vertical: 5.29 avg', chart: { type: 'bars', unit: 'avg place', max: 6, rows: [['Mama Beak (7 traits)', 3.97], ['Sprykin Tristana (3)', 4.90], ["Kha'Zix Rival 3", 5.29], ['Fae Xayah', 5.59]] },
       src: 'tactics'
     },
     {
       title: 'Strong openers are cheap, wide and use 2-unit breakpoints',
       body: 'Alistar / Ornn / Shen / Varus / Xayah (5 one- and two-costs, 4 traits all at breakpoint 1) shows a 76-81% round-win rate as the early board of five different comps. Vertical Elderwood 5 at the same level: 64%. The Coven 4 opener wins only 27-31% of rounds and is used as a deliberate loss-streak econ start by Fast 9 comps.',
-      stat: '81% round-win with 4 traits on 5 units',
+      stat: '81% round-win with 4 traits on 5 units', chart: { type: 'pct', unit: 'round-win rate of the level-5 board', rows: [['Wide opener (4 traits)', 81], ['Vertical Elderwood 5', 64], ['Coven 4 loss-streak', 30]] },
       src: 'metatft'
     },
     {
       title: 'Grow by adding ONE bridge unit per level',
       body: 'Sprykin Teemo kept the same core and added one trait-opener per level: L4 Alistar/Kobuko/Teemo/Veigar (65% rounds) -> L5 +LeBlanc -> L6 +Hecarim -> L7 +Sentinel -> L8 +Morgana (3.74) -> L9 +Kog\'Maw (2.56). Late additions are almost always units that open a new trait at its first breakpoint (Taric, Ivern, Kennen, Soraka).',
-      stat: 'Teemo L9 board: 2.56 avg',
+      stat: 'Teemo L9 board: 2.56 avg', chart: { type: 'bars', unit: 'Teemo avg place by final level', max: 8, rows: [['Level 6', 7.30], ['Level 7', 5.75], ['Level 8', 3.86], ['Level 9', 2.61]] },
       src: 'metatft'
     },
     {
       title: 'Levels are the biggest lever: plan the next level',
       body: 'Final level vs placement for reroll comps: Mama Beak L7 5.57 -> L8 3.47; Blossom Rengar L7 5.81 -> L8 3.26; Blossom Yunara L7 5.27 -> L8 2.88. Fast 9 comps: Juggernaut Amumu L9 4.72 -> L10 1.95. A clean trait web is worth ~0.2-0.4 placements; reaching the next level is worth ~2.',
-      stat: 'L7 -> L8: about 2 placements',
+      stat: 'L7 -> L8: about 2 placements', chart: { type: 'bars', unit: 'Mama Beak avg place by final level', max: 8, rows: [['Level 7', 5.57], ['Level 8', 3.47], ['Level 9', 2.48]] },
       src: 'metatft'
     },
     {
       title: 'Combat comps top-4, Scaling comps win',
       body: 'Level-7 reroll comps had the best average (4.35) and top-4 (53.2%) as a group; Fast 9 comps the best win rate (18.4%, e.g. Vanguard Morgana 20.3%, Elderwood Draven 19.3%) but only ~50% top 4. Tag your plan: Combat (win now, stabilise) or Scaling/Econ (win later or earn gold).',
-      stat: 'Fast 9: 18.4% win vs lvl 7: 10.8%',
+      stat: 'Fast 9: 18.4% win vs lvl 7: 10.8%', chart: { type: 'pct', unit: 'win rate', max: 25, rows: [['Fast 9 comps', 18.4], ['Fast 8 comps', 11.1], ['Level 7 comps', 10.8], ['Level 6 comps', 9.3]] },
       src: 'metatft'
     },
     {
       title: 'Keep 3-5 frontliners, never over-tank',
       body: '70% of level-8 final boards field 4-5 frontline units (Mama Beak: 4 front / 4 back). Boards with 7 frontliners averaged 5.76 vs 4.26 with 4; lean 2-3 front boards averaged 2.9-3.1 because they are strong reroll comps with one very tanky unit (Sprykin Azir, Blossom Yunara). At level 9, four true tanks was the best tank count (2.67 avg). Within the same comp, adding a frontliner instead of a carry was neutral (0.00).',
-      stat: '7 frontliners at L8: 5.76 avg vs 4.26 with 4',
+      stat: '7 frontliners at L8: 5.76 avg vs 4.26 with 4', chart: { type: 'bars', unit: 'L8 avg place by frontline count', max: 7, rows: [['3 front', 3.13], ['4 front', 4.26], ['5 front', 4.37], ['6 front', 4.44], ['7 front', 5.76]] },
       src: 'metatft'
     }
   ],
