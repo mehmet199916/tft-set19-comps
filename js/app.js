@@ -61,11 +61,11 @@
   }
 
   function boardPanel(b) {
-    return hexBoard(b) +
+    return '<div class="bp">' + hexBoard(b) +
       '<div class="stats"><span class="stat"><b>' + b.n_active + '</b> active traits</span><span class="stat">front <b>' + b.n_front + '</b> / back <b>' + b.n_back + '</b></span>' +
       '<span class="stat"><b>' + b.gold + '</b> gold of units</span>' + (b.unlockables.length ? '<span class="stat">&#128274; ' + esc(b.unlockables.join(', ')) + '</span>' : '') + '</div>' +
       traitPills(b) +
-      '<div class="actions"><a class="btn" href="' + esc(b.link) + '" target="_blank" rel="noopener">Open in team builder &#8599;</a></div>';
+      '<div class="actions"><a class="btn" href="' + esc(b.link) + '" target="_blank" rel="noopener">Open in team builder &#8599;</a></div></div>';
   }
 
   function tabsFor(c, labels, def) {
@@ -92,12 +92,12 @@
   function more(c) {
     var aug = c.augments ? '<div class="aug-grid">' + ['econ', 'combat', 'trait'].map(function (k) { return '<div class="aug"><b>' + (k === 'trait' ? 'Trait' : k === 'econ' ? 'Econ' : 'Combat') + '</b>' + esc((c.augments[k] || []).join(', ')) + '</div>'; }).join('') + '</div>' : '';
     var un = (c.unlocks || []).map(function (u) { return '<li><b>' + esc(u.unit) + '</b>: ' + esc(u.cond) + ' <span class="feas ' + esc(u.feas) + '">' + esc(u.feas) + ' chance</span></li>'; }).join('');
-    return '<details class="more"><summary>How to play: stages, items, augments, pivots</summary><div class="more-grid">' +
+    return '<div class="more"><div class="more-grid">' +
       '<div><h3>Stage plan</h3>' + stageTable(c.stages) + '</div><div><h3>Carry &amp; items</h3>' + itemsBlock(c) + '</div>' +
       '<div><h3>Augments that fit</h3>' + aug + '</div>' +
       '<dl class="prose"><dt>Why it works</dt><dd>' + esc(c.why) + '</dd><dt>Shop priorities</dt><dd>' + esc(c.shop) + '</dd><dt>Flex slot</dt><dd>' + esc(c.flex) + '</dd><dt>If you miss</dt><dd>' + esc(c.pivot) + '</dd>' +
       (un ? '<dt>Unlocks</dt><dd><ul class="method">' + un + '</ul></dd>' : '') +
-      '<dt>Transition</dt><dd>' + esc(c.transition) + '</dd><dt>Weaknesses</dt><dd>' + esc(c.weakness) + '</dd></dl></div></details>';
+      '<dt>Transition</dt><dd>' + esc(c.transition) + '</dd><dt>Weaknesses</dt><dd>' + esc(c.weakness) + '</dd></dl></div></div>';
   }
 
   function flowEarly(c) {
@@ -123,107 +123,137 @@
       (roll.filter(function (n) { return late.indexOf(n) < 0; }).length ? '<span class="step"><span class="lb">Sold</span>' + mini(roll.filter(function (n) { return late.indexOf(n) < 0; })) + '</span>' : '') + '</div>';
   }
 
-  function earlyCard(c) {
-    return '<article class="card" id="' + c.id + '" data-tag="' + esc(c.tag) + '">' + hero(c, '<span class="pill">Lv 4-5</span>') +
-      '<div class="card-body">' + tabsFor(c, ['Level 4', 'Level 5'], 1) + flowEarly(c) + more(c) + '</div></article>';
+  function compactPanel(b) {
+    return '<div class="bp">' + hexBoard(b) +
+      '<div class="stats"><span class="stat"><b>' + b.n_active + '</b> traits</span><span class="stat">front <b>' + b.n_front + '</b> / back <b>' + b.n_back + '</b></span>' +
+      (b.unlockables.length ? '<span class="stat">&#128274; ' + b.unlockables.length + ' unlock</span>' : '') + '</div>' +
+      traitPills(b) + '</div>';
   }
-  function lateCard(c) {
-    return '<article class="card" id="' + c.id + '" data-tag="' + esc(c.tag) + '">' + hero(c, '<span class="pill">Lv 7-9</span>') +
-      '<div class="card-body">' + tabsFor(c, ['Level 7', 'Level 8', 'Level 9'], 1) + flowLate(c) + more(c) + '</div></article>';
+
+  // One compact card: hero + one headline board + traits, with a "More details" drawer that holds
+  // every level, the transition flow and the how-to-play sections.
+  function card(c, pills, defIdx, intro, tabsHtml, flow, detail) {
+    var b = c.boards[defIdx];
+    return '<article class="card" id="' + c.id + '" data-tag="' + esc(c.tag) + '">' + hero(c, pills) +
+      '<div class="card-body"><div class="lite">' + compactPanel(b) +
+      '<div class="actions"><a class="btn" href="' + esc(b.link) + '" target="_blank" rel="noopener">Team builder &#8599;</a></div></div>' +
+      '<details class="full"><summary><span class="s-open">More details</span><span class="s-close">Show less</span></summary>' +
+      '<div class="full-body">' + (intro || '') + tabsHtml + flow + detail + '</div></details></div></article>';
   }
+  function earlyCard(c) { return card(c, '<span class="pill">Lv 4-5</span>', 1, '', tabsFor(c, ['Level 4', 'Level 5'], 1), flowEarly(c), more(c)); }
+  function lateCard(c) { return card(c, '<span class="pill">Lv 7-9</span>', 1, '', tabsFor(c, ['Level 7', 'Level 8', 'Level 9'], 1), flowLate(c), more(c)); }
   function rerollCard(c) {
-    var plan = '<details class="more"><summary>How to play it</summary><div class="more-grid"><div><h3>Roll plan</h3>' + stageTable(c.plan) + '</div>' +
+    var plan = '<div class="more"><div class="more-grid"><div><h3>Roll plan</h3>' + stageTable(c.plan) + '</div>' +
       '<div><h3>Carry &amp; items</h3>' + itemsBlock(c) + '</div><dl class="prose"><dt>3-star targets</dt><dd>' + esc(c.stars.join(', ')) + '</dd>' +
-      '<dt>Contested units</dt><dd>' + esc(c.hold) + '</dd><dt>If you hit</dt><dd>' + esc(c.hit) + '</dd><dt>If you miss</dt><dd>' + esc(c.miss) + '</dd></dl></div></details>';
-    return '<article class="card" id="' + c.id + '" data-tag="' + esc(c.tag) + '">' + hero(c, '<span class="pill roll-pill">Roll at level ' + c.roll_level + '</span><span class="pill">' + UNIT[c.carry].cost + '-cost carry</span>') +
-      '<div class="card-body"><p class="why3"><b>Why 3-star ' + esc(c.carry) + ':</b> ' + esc(c.why_3star) + '</p>' +
-      tabsFor(c, ['Roll board (lv ' + c.roll_level + ')', 'Level 8'], 0) + flowReroll(c) + plan + '</div></article>';
+      '<dt>Contested units</dt><dd>' + esc(c.hold) + '</dd><dt>If you hit</dt><dd>' + esc(c.hit) + '</dd><dt>If you miss</dt><dd>' + esc(c.miss) + '</dd></dl></div></div>';
+    return card(c, '<span class="pill roll-pill">Roll lv ' + c.roll_level + '</span><span class="pill">' + UNIT[c.carry].cost + '-cost carry</span>', 0,
+      '<p class="why3"><b>Why 3-star ' + esc(c.carry) + ':</b> ' + esc(c.why_3star) + '</p>',
+      tabsFor(c, ['Roll board (lv ' + c.roll_level + ')', 'Level 8'], 0), flowReroll(c), plan);
   }
 
   $('early-list').innerHTML = C.early.map(earlyCard).join('');
   $('late-list').innerHTML = C.late.map(lateCard).join('');
   $('reroll-list').innerHTML = C.reroll.map(rerollCard).join('');
 
-  // ---------- cheat sheet ----------
-  var CATS = [
-    ['antiheal', 'Anti-heal', 'Wound reduces healing; Burn deals damage over time.'],
-    ['shred', 'Armor / MR shred & debuffs', 'Armor or Magic Resist reduction, armor ignore, Vulnerable, Weaken, Slow.'],
-    ['econ', 'Money, XP & loot', 'Units, traits and augments that hand out gold, XP, champions or items.'],
-    ['cc', 'Crowd control', 'Stun, knock-up, Captivate, taunt, pull.'],
-    ['sustain', 'Shields, heals & sustain', 'Self or team shields, heals, Omnivamp, Durability.'],
-    ['execute', 'Execute & true damage', 'Executes, true damage and max-Health damage.'],
-    ['mobility', 'Dash, untargetable & assassins', 'Units that dash, blink, teleport or become untargetable.'],
-    ['aoe', 'Big AoE', 'Damage to all enemies, across the board, or in lines and cones.'],
-    ['support', 'Team buffs', 'Units and traits that buff allies.'],
-    ['roles', 'Tanks vs carries', 'Every unit by role.'],
-    ['unlocks', 'Unlockable units', 'Units that start locked and the condition to unlock them.'],
-    ['emblems', 'Emblems', 'Trait emblem recipes (Spatula + component), from the MetaTFT set page.'],
-    ['traits', 'Trait breakpoints', 'Every trait with its breakpoints and members.'],
-    ['uniques', 'Unique 1-unit traits', 'Traits that only one champion has.']
+  // ---------- cheat sheet: grouped by use case ----------
+  // [key, icon (HTML entity), title, "reach for this when...", source categories, reference?]
+  var GROUPS = [
+    ['heal', '&#129656;', 'Stop healing', 'Enemy lifesteal or healers', ['antiheal']],
+    ['armor', '&#128737;', 'Break armor & MR', 'Their tanks are too sturdy', ['shred']],
+    ['money', '&#128176;', 'Make money', 'Gold, XP, free units, items', ['econ']],
+    ['control', '&#129482;', 'Lock down the fight', 'Stuns, knock-ups, taunts', ['cc']],
+    ['survive', '&#128154;', 'Stay alive', 'Shields, heals, sustain', ['sustain']],
+    ['burst', '&#128481;', 'Kill carries fast', 'Execute, true damage, assassins', ['execute', 'mobility']],
+    ['aoe', '&#128165;', 'Hit everyone', 'Big area damage', ['aoe']],
+    ['buff', '&#128227;', 'Buff the team', 'Make your allies stronger', ['support']],
+    ['roles', '&#129521;', 'Tanks vs carries', 'Every unit by role', ['roles'], true],
+    ['unlocks', '&#128275;', 'Unlockables', 'How to unlock each one', ['unlocks'], true],
+    ['emblems', '&#128310;', 'Emblems', 'Spatula recipes', ['emblems'], true],
+    ['traits', '&#128203;', 'All traits', 'Breakpoints and members', ['traits'], true],
+    ['uniques', '&#11088;', 'Unique traits', 'One-unit traits', ['uniques'], true]
   ];
-  var cheatState = { cat: 'all', q: '' };
-  $('cheat-chips').innerHTML = '<button class="chip-btn is-on" data-cat="all" aria-pressed="true">All</button>' + CATS.map(function (c) { return '<button class="chip-btn" data-cat="' + c[0] + '" aria-pressed="false">' + esc(c[1]) + '</button>'; }).join('');
+  var cheatState = { cat: 'all', q: '' }, DET = {};
 
   function usesLinks(name) {
     var u = UNIT[name]; if (!u || !u.comps.length) return '';
-    return '<div class="uses">In: ' + u.comps.map(function (id) { return BYID[id] ? '<a href="' + compHref(id) + '">' + esc(BYID[id].name) + '</a>' : ''; }).join('') + '</div>';
+    return '<div class="uses">Used in: ' + u.comps.map(function (id) { return BYID[id] ? '<a href="' + compHref(id) + '">' + esc(BYID[id].name) + '</a>' : ''; }).join('') + '</div>';
   }
-  function unitEntry(name, note, kws) {
-    var u = UNIT[name] || { cost: '?', traits: [] };
-    return '<div class="centry" data-s="' + esc((name + ' ' + u.traits.join(' ') + ' ' + note + ' ' + (kws || []).join(' ')).toLowerCase()) + '">' + portrait(name) +
-      '<div><div class="nm">' + esc(name) + '</div><div class="meta">' + u.cost + ' gold &middot; ' + esc(u.traits.join(', ')) + '</div>' +
-      '<div class="note">' + esc(note) + '</div>' + (kws && kws.length ? '<div class="kws">' + kws.map(function (k) { return '<span class="kw">' + esc(k) + '</span>'; }).join('') + '</div>' : '') + usesLinks(name) + '</div></div>';
+  function itemsFor(keys) {
+    var out = [], seen = {};
+    function add(it) {
+      var k = it.k + ':' + it.name;
+      if (seen[k]) { var p = seen[k]; if (it.note && p.note.indexOf(it.note) < 0) p.note += ' ' + it.note; (it.kws || []).forEach(function (w) { if (p.kws.indexOf(w) < 0) p.kws.push(w); }); return; }
+      seen[k] = it; out.push(it);
+    }
+    keys.forEach(function (key) {
+      (CH.cats[key] || []).forEach(function (r) { add({ k: 'unit', name: r.unit, note: r.note, kws: (r.kw || []).slice() }); });
+      ((CH.extra || {})[key] || []).forEach(function (t) { add({ k: 'trait', name: t.trait, note: t.note, label: 'Trait', kws: [] }); });
+      if (key === 'econ') (CH.econ_aug || []).forEach(function (a) { add({ k: 'aug', name: a.name, note: a.note, label: a.tier + ' aug', kws: [] }); });
+      if (key === 'unlocks') CH.units.filter(function (u) { return u.unlock; }).forEach(function (u) { add({ k: 'unit', name: u.name, note: 'Unlock: ' + u.unlock, kws: [] }); });
+    });
+    return out;
   }
-  function traitEntry(t, note, label) {
-    return '<div class="centry" data-s="' + esc((t + ' ' + note + ' trait').toLowerCase()) + '"><span class="tchip">' + esc(label || 'Trait') + '</span><div><div class="nm">' + esc(t) + '</div><div class="note">' + esc(note) + '</div></div></div>';
+  function tile(g, it, i) {
+    var u = UNIT[it.name] || {};
+    var s = (it.name + ' ' + (u.traits || []).join(' ') + ' ' + it.note + ' ' + it.kws.join(' ') + ' ' + (it.label || '')).toLowerCase();
+    if (it.k === 'unit') return '<button type="button" class="vtile" data-g="' + g + '" data-i="' + i + '" data-s="' + esc(s) + '">' + portrait(it.name, 'tl') + '<span class="vn">' + esc(it.name) + '</span></button>';
+    return '<button type="button" class="vtile txt" data-g="' + g + '" data-i="' + i + '" data-s="' + esc(s) + '"><span class="vlab">' + esc(it.label || 'Trait') + '</span><span class="vn">' + esc(it.name) + '</span></button>';
   }
-  function section(key, title, sub, inner, count) {
-    return '<section class="cat" data-cat="' + key + '"><h3>' + esc(title) + ' <span class="n">' + count + '</span></h3><p class="sub">' + esc(sub) + '</p>' + inner + '</section>';
+  function showDetail(g, i) {
+    var it = DET[g][i], sec = document.querySelector('.cat[data-cat="' + g + '"]'); if (!it || !sec) return;
+    var u = UNIT[it.name] || {};
+    sec.querySelectorAll('.vtile').forEach(function (t) { t.classList.toggle('sel', t.dataset.i === String(i)); });
+    sec.querySelector('.vdetail').innerHTML = it.k === 'unit'
+      ? '<div class="vd-head">' + portrait(it.name, 'sm') + '<div><b>' + esc(it.name) + '</b><div class="meta">' + (u.cost || '?') + ' gold &middot; ' + esc((u.traits || []).join(', ')) + '</div></div></div><p>' + esc(it.note) + '</p>' +
+        (it.kws.length ? '<div class="kws">' + it.kws.map(function (k) { return '<span class="kw">' + esc(k) + '</span>'; }).join('') + '</div>' : '') + usesLinks(it.name)
+      : '<div class="vd-head"><span class="tchip">' + esc(it.label || 'Trait') + '</span><div><b>' + esc(it.name) + '</b></div></div><p>' + esc(it.note) + '</p>';
+  }
+  function catSection(g, inner, n) {
+    var d = GROUPS.filter(function (x) { return x[0] === g; })[0];
+    return '<section class="cat' + (d[5] ? ' ref' : '') + '" data-cat="' + g + '"><header class="cat-head"><span class="ic" aria-hidden="true">' + d[1] + '</span><div><h3>' + esc(d[2]) + ' <span class="n">' + n + '</span></h3><p class="sub">' + esc(d[3]) + '</p></div></header>' + inner + '</section>';
   }
 
   function buildCheat() {
-    var h = '';
-    CATS.forEach(function (c) {
-      var key = c[0], inner = '', n = 0;
-      if (CH.cats[key] || (CH.extra && CH.extra[key])) {
-        var rows = (CH.cats[key] || []).map(function (r) { n++; return unitEntry(r.unit, r.note, r.kw); });
-        (CH.extra[key] || []).forEach(function (t) { n++; rows.push(traitEntry(t.trait, t.note)); });
-        if (key === 'econ') (CH.econ_aug || []).forEach(function (a) { n++; rows.push(traitEntry(a.name, a.note, a.tier + ' aug')); });
-        inner = '<div class="cgrid">' + rows.join('') + '</div>';
-      } else if (key === 'roles') {
+    var h = '', nav = '';
+    GROUPS.forEach(function (d) {
+      var g = d[0], inner = '', n = 0;
+      if (g === 'roles') {
         var groups = { 'Tanks': [], 'Melee fighters & assassins': [], 'Ranged carries & casters': [] };
         CH.units.forEach(function (u) { (u.tank ? groups.Tanks : u.pos === 'front' ? groups['Melee fighters & assassins'] : groups['Ranged carries & casters']).push(u); });
-        inner = '<div class="ctable-wrap"><table class="ctable"><thead><tr><th>Role</th><th>Units (by cost)</th></tr></thead><tbody>' + Object.keys(groups).map(function (g) {
-          n += groups[g].length;
-          return '<tr data-s="' + esc((g + ' ' + groups[g].map(function (u) { return u.name; }).join(' ')).toLowerCase()) + '"><td><b>' + g + '</b><br><span class="muted">' + groups[g].length + ' units</span></td><td><span class="mini">' + groups[g].map(function (u) { return portrait(u.name, 'sm'); }).join('') + '</span></td></tr>';
-        }).join('') + '</tbody></table></div>';
-      } else if (key === 'unlocks') {
-        var ul = CH.units.filter(function (u) { return u.unlock; });
-        n = ul.length;
-        inner = '<div class="cgrid">' + ul.map(function (u) { return unitEntry(u.name, 'Unlock: ' + u.unlock, []); }).join('') + '</div>';
-      } else if (key === 'emblems') {
+        inner = '<div class="rolegrid">' + Object.keys(groups).map(function (r) {
+          n += groups[r].length;
+          return '<div class="rolebox" data-s="' + esc((r + ' ' + groups[r].map(function (u) { return u.name; }).join(' ')).toLowerCase()) + '"><h4>' + r + ' <span class="muted">' + groups[r].length + '</span></h4><span class="mini">' + groups[r].map(function (u) { return portrait(u.name, 'sm'); }).join('') + '</span></div>';
+        }).join('') + '</div>';
+      } else if (g === 'emblems') {
         var em = CH.traits.filter(function (t) { return t.emblem; });
         n = em.length;
         inner = '<div class="ctable-wrap"><table class="ctable"><thead><tr><th>Emblem</th><th>Recipe</th><th>Breakpoints</th></tr></thead><tbody>' + em.map(function (t) {
           return '<tr data-s="' + esc((t.name + ' emblem ' + t.emblem).toLowerCase()) + '"><td><b>' + esc(t.name) + '</b></td><td>Spatula + ' + esc(t.emblem) + '</td><td class="bps">' + t.bps.join(' / ') + '</td></tr>';
         }).join('') + '</tbody></table></div>';
-      } else if (key === 'traits' || key === 'uniques') {
-        var tr = CH.traits.filter(function (t) { return key === 'uniques' ? t.unique : !t.unique; });
+      } else if (g === 'traits' || g === 'uniques') {
+        var tr = CH.traits.filter(function (t) { return g === 'uniques' ? t.unique : !t.unique; });
         n = tr.length;
-        inner = '<div class="ctable-wrap"><table class="ctable"><thead><tr><th>Trait</th>' + (key === 'traits' ? '<th>Breakpoints</th>' : '') + '<th>Members</th><th>What it does</th></tr></thead><tbody>' + tr.map(function (t) {
-          return '<tr data-s="' + esc((t.name + ' ' + t.members.join(' ') + ' ' + t.text).toLowerCase()) + '"><td><b>' + esc(t.name) + '</b></td>' + (key === 'traits' ? '<td class="bps">' + t.bps.join(' / ') + '</td>' : '') +
+        inner = '<div class="ctable-wrap"><table class="ctable"><thead><tr><th>Trait</th>' + (g === 'traits' ? '<th>Breakpoints</th>' : '') + '<th>Members</th><th>What it does</th></tr></thead><tbody>' + tr.map(function (t) {
+          return '<tr data-s="' + esc((t.name + ' ' + t.members.join(' ') + ' ' + t.text).toLowerCase()) + '"><td><b>' + esc(t.name) + '</b></td>' + (g === 'traits' ? '<td class="bps">' + t.bps.join(' / ') + '</td>' : '') +
             '<td><span class="mini">' + t.members.map(function (m) { return portrait(m, 'sm'); }).join('') + '</span></td><td>' + esc(t.text) + '</td></tr>';
         }).join('') + '</tbody></table></div>';
+      } else {
+        var items = itemsFor(d[4]); DET[g] = items; n = items.length;
+        inner = '<div class="vgrid">' + items.map(function (it, i) { return tile(g, it, i); }).join('') + '</div><div class="vdetail" aria-live="polite"></div>';
       }
-      h += section(key, c[1], c[2], inner, n);
+      h += catSection(g, inner, n);
+      nav += '<button type="button" class="ucase' + (d[5] ? ' refc' : '') + '" data-cat="' + g + '" aria-pressed="false"><span class="ic" aria-hidden="true">' + d[1] + '</span><span class="ut">' + esc(d[2]) + '</span><span class="uw">' + esc(d[3]) + '</span><span class="un">' + n + '</span></button>';
     });
+    $('cheat-chips').innerHTML = nav;
     $('cheat-body').innerHTML = h + '<p class="empty" id="cheat-empty" hidden>No matches.</p>';
+    Object.keys(DET).forEach(function (g) { showDetail(g, 0); });
   }
   buildCheat();
   function applyCheat() {
     var q = cheatState.q.trim().toLowerCase(), any = false;
     document.querySelectorAll('#cheat-body .cat').forEach(function (sec) {
-      var showSec = cheatState.cat === 'all' || sec.dataset.cat === cheatState.cat, vis = 0;
+      var ref = sec.classList.contains('ref');
+      var showSec = cheatState.cat === 'all' ? (!ref || !!q) : sec.dataset.cat === cheatState.cat, vis = 0;
       sec.querySelectorAll('[data-s]').forEach(function (el) {
         var ok = !q || el.dataset.s.indexOf(q) >= 0; el.hidden = !ok; if (ok) vis++;
       });
@@ -235,10 +265,14 @@
   $('cheat-q').addEventListener('input', function (e) { cheatState.q = e.target.value; applyCheat(); });
   $('cheat-chips').addEventListener('click', function (e) {
     var b = e.target.closest('[data-cat]'); if (!b) return;
-    cheatState.cat = b.dataset.cat;
-    $('cheat-chips').querySelectorAll('[data-cat]').forEach(function (x) { var on = x === b; x.classList.toggle('is-on', on); x.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    cheatState.cat = cheatState.cat === b.dataset.cat ? 'all' : b.dataset.cat;
+    $('cheat-chips').querySelectorAll('[data-cat]').forEach(function (x) { var on = x.dataset.cat === cheatState.cat; x.classList.toggle('is-on', on); x.setAttribute('aria-pressed', on ? 'true' : 'false'); });
     applyCheat();
   });
+  $('cheat-body').addEventListener('click', function (e) {
+    var t = e.target.closest('.vtile'); if (t) showDetail(t.dataset.g, +t.dataset.i);
+  });
+  applyCheat();
 
   // ---------- routing ----------
   var TABS = ['early', 'late', 'reroll', 'cheatsheet'];
@@ -283,7 +317,7 @@
     }
     var tp = e.target.closest('.tp:not(.near)');
     if (tp) {
-      var panel = tp.closest('[role="tabpanel"]'), board = panel.querySelector('.board');
+      var panel = tp.closest('.bp'), board = panel.querySelector('.board');
       var was = tp.getAttribute('aria-pressed') === 'true';
       panel.querySelectorAll('.tp').forEach(function (x) { x.setAttribute('aria-pressed', 'false'); });
       board.querySelectorAll('.hex.on').forEach(function (h) { h.classList.remove('on'); });
